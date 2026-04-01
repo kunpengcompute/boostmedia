@@ -1,0 +1,255 @@
+diff --git a/source/CMakeLists.txt b/source/CMakeLists.txt
+index 5c6dda9e8..e4e2c6ab5 100755
+--- a/source/CMakeLists.txt
++++ b/source/CMakeLists.txt
+@@ -795,6 +795,8 @@ if((MSVC_IDE OR XCODE OR GCC) AND ENABLE_ASSEMBLY)
+         endforeach()
+     endif()
+ endif()
++link_directories(/home/kvcl/output/lib/)   # kvcl lib path
++set(KVCL_LIB kvcl)
+ source_group(ASM FILES ${ASM_SRCS})
+ if(ENABLE_HDR10_PLUS)
+     add_library(x265-static STATIC $<TARGET_OBJECTS:encoder> $<TARGET_OBJECTS:common> $<TARGET_OBJECTS:dynamicHDR10> ${ASM_OBJS})
+@@ -815,6 +817,7 @@ endif()
+ if(SVTHEVC_FOUND)
+     target_link_libraries(x265-static ${SVT_HEVC_LIBRARY})
+ endif()
++target_link_libraries(x265-static ${KVCL_LIB})
+ install(TARGETS x265-static
+     LIBRARY DESTINATION ${LIB_INSTALL_DIR}
+     ARCHIVE DESTINATION ${LIB_INSTALL_DIR})
+@@ -894,6 +897,7 @@ if(ENABLE_SHARED)
+     if(SVTHEVC_FOUND)
+         target_link_libraries(x265-shared ${SVT_HEVC_LIBRARY})
+     endif(SVTHEVC_FOUND)
++    target_link_libraries(x265-shared ${KVCL_LIB})
+     if(MSVC)
+         set_target_properties(x265-shared PROPERTIES OUTPUT_NAME libx265)
+     else()
+diff --git a/source/common/primitives.cpp b/source/common/primitives.cpp
+index 4db706d74..79c4b0cc9 100644
+--- a/source/common/primitives.cpp
++++ b/source/common/primitives.cpp
+@@ -23,10 +23,159 @@
+ 
+ #include "common.h"
+ #include "primitives.h"
+-
++#include "kvcl.h"
+ namespace X265_NS {
+ // x265 private namespace
+ 
++#define SADXPOS_SRC_STRIDE 64
++void KvclSad4x64x16FixedSrcStride(const uint8_t *src,  const uint8_t *ref0, const uint8_t *ref1, const uint8_t *ref2,
++        const uint8_t *ref3, long refStride, int32_t *sadRes){
++    KvclSad4x64x16(src, SADXPOS_SRC_STRIDE, ref0, ref1, ref2, ref3, refStride, sadRes);
++}
++
++void KvclSad4x64x32FixedSrcStride(const uint8_t *src,  const uint8_t *ref0, const uint8_t *ref1, const uint8_t *ref2,
++        const uint8_t *ref3, long refStride, int32_t *sadRes){
++    KvclSad4x64x32(src, SADXPOS_SRC_STRIDE, ref0, ref1, ref2, ref3, refStride, sadRes);
++}
++
++void KvclSad4x64x64FixedSrcStride(const uint8_t *src,  const uint8_t *ref0, const uint8_t *ref1, const uint8_t *ref2,
++        const uint8_t *ref3, long refStride, int32_t *sadRes){
++    KvclSad4x64x64(src, SADXPOS_SRC_STRIDE, ref0, ref1, ref2, ref3, refStride, sadRes);
++}
++
++void KvclSad4x32x32FixedSrcStride(const uint8_t *src,  const uint8_t *ref0, const uint8_t *ref1, const uint8_t *ref2,
++        const uint8_t *ref3, long refStride, int32_t *sadRes){
++    KvclSad4x32x32(src, SADXPOS_SRC_STRIDE, ref0, ref1, ref2, ref3, refStride, sadRes);
++}
++
++void KvclSad4x32x64FixedSrcStride(const uint8_t *src,  const uint8_t *ref0, const uint8_t *ref1, const uint8_t *ref2,
++        const uint8_t *ref3, long refStride, int32_t *sadRes){
++    KvclSad4x32x64(src, SADXPOS_SRC_STRIDE, ref0, ref1, ref2, ref3, refStride, sadRes);
++}
++#undef SADXPOS_SRC_STRIDE
++
++
++void setupKvclIntrinsicPrimitives(EncoderPrimitives &p, int cpuMask)
++{
++    //PIXEL
++#define PU_SATD(N) \
++    p.pu[LUMA_ ## N ## x ## N].satd = KvclSatd ## N ## x ## N;  \
++    p.chroma[X265_CSP_I420].pu[CHROMA_420_ ## N ## x ## N].satd = KvclSatd ## N ## x ## N;  \
++    p.chroma[X265_CSP_I422].pu[CHROMA_422_ ## N ## x ## N].satd = KvclSatd ## N ## x ## N;
++
++    PU_SATD(8)
++    PU_SATD(16)
++#undef PU_SATD 
++
++    //DCT
++    p.cu[BLOCK_32x32].dct = KvclDct32x32;
++
++    //FILTER
++#define LUMA_VSS(W, H) \
++    p.pu[LUMA_ ## W ## x ## H].luma_vss = KvclLumaVSS ## W ## x ## H;
++
++    LUMA_VSS(8, 8)
++    LUMA_VSS(16, 16)
++    LUMA_VSS(32, 32)
++    LUMA_VSS(64, 64)
++#undef LUMA_VSS
++
++#define LUMA_VPS(W, H) \
++    p.pu[LUMA_ ## W ## x ## H].luma_vps = KvclLumaVPS ## W ## x ## H;
++
++    LUMA_VPS(16, 16)
++    LUMA_VPS(32, 32)
++    LUMA_VPS(64, 64)
++#undef LUMA_VPS
++
++#define LUMA_VPP(W, H) \
++    p.pu[LUMA_ ## W ## x ## H].luma_vpp = KvclLumaVPP ## W ## x ## H;
++
++    LUMA_VPP(32, 32)
++    LUMA_VPP(64, 64)
++#undef LUMA_VPP
++
++#define LUMA_HPP(W, H) \
++    p.pu[LUMA_ ## W ## x ## H].luma_hpp = KvclLumaHPP ## W ## x ## H;
++
++    LUMA_HPP(32, 32)
++    LUMA_HPP(64, 64)
++#undef LUMA_HPP
++
++#define CHROMA_VPP(W, H)\
++    p.chroma[X265_CSP_I420].pu[CHROMA_420_ ## W ## x ## H].filter_vpp = KvclChromaVPP ## W ## x ## H; \
++    p.chroma[X265_CSP_I422].pu[CHROMA_422_ ## W ## x ## H].filter_vpp = KvclChromaVPP ## W ## x ## H; \
++    p.chroma[X265_CSP_I444].pu[LUMA_ ## W ## x ## H].filter_vpp = KvclChromaVPP ## W ## x ## H;
++
++    CHROMA_VPP(8, 8)
++    CHROMA_VPP(16, 16)
++    CHROMA_VPP(32, 32)
++#undef CHROMA_VPP
++
++#define CHROMA_VSP(W, H)\
++    p.chroma[X265_CSP_I420].pu[CHROMA_420_ ## W ## x ## H].filter_vsp = KvclChromaVSP ## W ## x ## H; \
++    p.chroma[X265_CSP_I422].pu[CHROMA_422_ ## W ## x ## H].filter_vsp = KvclChromaVSP ## W ## x ## H; \
++    p.chroma[X265_CSP_I444].pu[LUMA_ ## W ## x ## H].filter_vsp = KvclChromaVSP ## W ## x ## H;
++
++    CHROMA_VSP(4, 4)
++    CHROMA_VSP(8, 8)
++    CHROMA_VSP(16, 16)
++    CHROMA_VSP(32, 32)
++#undef CHROMA_VSP
++
++#define CHROMA_HPP(W, H)\
++    p.chroma[X265_CSP_I420].pu[CHROMA_420_ ## W ## x ## H].filter_hpp = KvclChromaHPP ## W ## x ## H; \
++    p.chroma[X265_CSP_I422].pu[CHROMA_422_ ## W ## x ## H].filter_hpp = KvclChromaHPP ## W ## x ## H; \
++    p.chroma[X265_CSP_I444].pu[LUMA_ ## W ## x ## H].filter_hpp = KvclChromaHPP ## W ## x ## H;
++
++    CHROMA_HPP(16, 16)
++    CHROMA_HPP(32, 32)
++#undef CHROMA_HPP
++
++#define CHROMA_HPS(W, H)\
++    p.chroma[X265_CSP_I420].pu[CHROMA_420_ ## W ## x ## H].filter_hps = KvclChromaHPS ## W ## x ## H; \
++    p.chroma[X265_CSP_I422].pu[CHROMA_422_ ## W ## x ## H].filter_hps = KvclChromaHPS ## W ## x ## H; \
++    p.chroma[X265_CSP_I444].pu[LUMA_ ## W ## x ## H].filter_hps = KvclChromaHPS ## W ## x ## H;
++
++    CHROMA_HPS(16, 16)
++    CHROMA_HPS(32, 32)
++#undef CHROMA_HPS
++
++    //SAO
++    p.saoCuStatsE0 = KvclSaoCuStatsE0;
++    p.saoCuStatsE1 = KvclSaoCuStatsE1;
++    p.saoCuStatsE2 = KvclSaoCuStatsE2;
++    p.saoCuStatsE3 = KvclSaoCuStatsE3;
++}
++
++void setupKvclAssemblyPrimitives(EncoderPrimitives &p, int cpuMask)
++{
++    //PIXEL
++    p.pu[LUMA_64x32].sad = KvclSad64x32;
++    p.pu[LUMA_64x64].sad = KvclSad64x64;
++
++#define CU_SA8D(N) \
++    p.cu[BLOCK_ ## N ## x ## N].sa8d = KvclSa8d ## N ## x ## N; \
++    p.chroma[X265_CSP_I420].cu[BLOCK_16x16].sa8d = KvclSa8d ## N ## x ## N;
++
++    CU_SA8D(8)
++    CU_SA8D(16)
++#undef CU_SA8D
++
++#define PU_SAD_x4(W, H) \
++    p.pu[LUMA_ ## W ## x ## H].sad_x4 = KvclSad4x ## W ## x ## H ## FixedSrcStride;
++
++    PU_SAD_x4(32, 32)
++    PU_SAD_x4(32, 64)
++    PU_SAD_x4(64, 16)
++    PU_SAD_x4(64, 32)
++    PU_SAD_x4(64, 64)
++#undef PU_SAD_x4
++
++    //DCT
++    p.cu[BLOCK_16x16].dct = KvclDct16x16;
++    p.scanPosLast = KvclScanPosLast;
++}
+ extern const uint8_t lumaPartitionMapTable[] =
+ {
+ //  4          8          12          16          20  24          28  32          36  40  44  48          52  56  60  64
+@@ -272,7 +421,8 @@ void x265_setup_primitives(x265_param *param)
+             setupIntraPrimitives_altivec(primitives);       // intrapred_altivec.cpp, overwrite the initialization for altivec optimizated functions
+         }
+ #endif
+-
++        setupKvclIntrinsicPrimitives(primitives, param->cpuid);
++        setupKvclAssemblyPrimitives(primitives, param->cpuid);
+         setupAliasPrimitives(primitives);
+ 
+         if (param->bLowPassDct)
+diff --git a/source/common/primitives.h b/source/common/primitives.h
+index fd343f5fe..451113ed1 100644
+--- a/source/common/primitives.h
++++ b/source/common/primitives.h
+@@ -37,7 +37,6 @@
+ 
+ namespace X265_NS {
+ // x265 private namespace
+-
+ enum LumaPU
+ {
+     // Square (the first 5 PUs match the block sizes)
+@@ -435,6 +434,8 @@ struct EncoderPrimitives
+ /* This copy of the table is what gets used by the encoder */
+ extern EncoderPrimitives primitives;
+ 
++void setupKvclIntrinsicPrimitives(EncoderPrimitives &p, int cpuMask);
++void setupKvclAssemblyPrimitives(EncoderPrimitives &p, int cpuMask);
+ /* Returns a LumaPU enum for the given size, always expected to return a valid enum */
+ inline int partitionFromSizes(int width, int height)
+ {
+diff --git a/source/test/testbench.cpp b/source/test/testbench.cpp
+index b8ef760f2..5eb654806 100644
+--- a/source/test/testbench.cpp
++++ b/source/test/testbench.cpp
+@@ -215,6 +215,7 @@ int main(int argc, char *argv[])
+         EncoderPrimitives vecprim;
+         memset(&vecprim, 0, sizeof(vecprim));
+         setupIntrinsicPrimitives(vecprim, test_arch[i].flag);
++        setupKvclIntrinsicPrimitives(vecprim, test_arch[i].flag);
+         setupAliasPrimitives(vecprim);
+         for (size_t h = 0; h < sizeof(harness) / sizeof(TestHarness*); h++)
+         {
+@@ -233,6 +234,7 @@ int main(int argc, char *argv[])
+         memset(&asmprim, 0, sizeof(asmprim));
+ 
+         setupAssemblyPrimitives(asmprim, test_arch[i].flag);
++        setupKvclAssemblyPrimitives(asmprim, test_arch[i].flag);
+         setupAliasPrimitives(asmprim);
+         memcpy(&primitives, &asmprim, sizeof(EncoderPrimitives));
+         for (size_t h = 0; h < sizeof(harness) / sizeof(TestHarness*); h++)
+@@ -258,7 +260,8 @@ int main(int argc, char *argv[])
+ #endif
+ 
+         setupAssemblyPrimitives(optprim, cpuid);
+-
++        setupKvclIntrinsicPrimitives(optprim, cpuid);
++        setupKvclAssemblyPrimitives(optprim, cpuid);
+         /* Note that we do not setup aliases for performance tests, that would be
+          * redundant. The testbench only verifies they are correctly aliased */
+ 

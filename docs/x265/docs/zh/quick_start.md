@@ -28,7 +28,7 @@
     |-x265-params "bitrate=2000:vbv-maxrate=2000:vbv-bufsize=2000"|设置x265编码器的参数，包括码率、最大码率、缓冲区大小。|
     |-f mp4 output.mp4|指定输出格式为mp4，可指定其他类型。|
     
-    回显编码了多少帧则表示编码成功，如：
+    回显编码帧数及编码时间则表示编码成功，如：
 
     ```shell
     encoded 600 frames in 7.50s (80.01 fps), 1992.12 kb/s, Avg QP:38.30

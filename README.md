@@ -38,12 +38,14 @@
 |--|--|
 | [ffmpeg](https://gitcode.com/boostkit/ffmpeg)  | 通过向量优化、算法优化和并行优化等方法，提升开源媒体框架ffmpeg中的色彩空间转换、视频分辨率缩放算法性能 |
 
-## 文档
+## 关于社区
 
-## 讨论
+提供社区治理架构、SIG组织运作章程、参与贡献、邮件订阅、社媒联系方式等公共模块内容简介和指引。
 
-如果发现问题，请进入[讨论](https://gitcode.com/boostkit/boostmedia/discussions)与我们联系。
+## 贡献、建议与交流
 
-## 许可协议
+欢迎大家为社区做贡献，如果使用过程中有任何问题/建议，或者需要反馈特性需求和bug报告，可以提交[Issues](https://gitcode.com/boostkit/community/blob/master/docs/contributor/issue-submit.md)联系我们，具体贡献方法可参考[这里](https://gitcode.com/boostkit/community/blob/master/docs/contributor/contributing.md)。同时也欢迎大家在[讨论专区](https://gitcode.com/boostkit/community/discussions)展开讨论交流。感谢您的支持。
 
-使用本领域源码及其附带软件，即视为您已阅读、理解并同意相关软件许可协议条款与条件的约束。
+## LICENSE
+
+本项目的文档适用于CC-BY 4.0许可证，具体请参见[LICENSE文件](LICENSE-DOCS)。

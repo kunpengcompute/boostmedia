@@ -2824,6 +2824,66 @@ result = 0
 dst = 1      -63     9     -71      3      -43       41      -255      0     -127
 ```
 
+##### ConjPack
+
+将Pack格式频谱原地还原为共轭对称复数频谱。
+
+函数接口声明如下：
+
+    HmppResult HMPPS\_ConjPack\_32fc\_I\(Hmpp32fc\* srcDst, int32\_t lenDst\);
+
+**参数**
+
+|参数名|描述|取值范围|输入/输出|
+|--|--|--|--|
+|srcDst|指向原地操作向量的指针。|非空|输入/输出|
+|lenDst|ConjPack目标向量长度。|(0,INT_MAX]|输入|
+
+**返回值**
+
+- 成功：返回HMPP\_STS\_NO\_ERR。
+- 失败：返回错误码。
+
+**错误码**
+
+|错误码|描述|
+|--|--|
+|HMPP_STS_NULL_PTR_ERR|srcDst这几个入参中存在空指针。|
+|HMPP_STS_SIZE_ERR|lenDst小于或等于0。|
+
+**示例**
+
+```c
+#include "hmpps.h"
+#include <stdio.h>
+
+int main(void)
+{
+    Hmpp32fc srcDst[6] = {
+        {10.0f, 0.0f},
+        {1.0f, 2.0f},
+        {3.0f, 4.0f},
+        {0.0f, 0.0f},
+        {0.0f, 0.0f},
+        {20.0f, 0.0f}
+    };
+    HmppResult ret = HMPPS_ConjPack_32fc_I(srcDst, 6);
+    printf("ret=%d\n", ret);
+    for (int i = 0; i < 6; ++i) {
+        printf("(%.6f, %.6f) ", srcDst[i].re, srcDst[i].im);
+    }
+    printf("\n");
+    return 0;
+}
+```
+
+运行结果：
+
+```text
+ret=0
+(10.000000, 0.000000) (0.000000, 1.000000) (2.000000, 3.000000) (4.000000, 0.000000) (2.000000, -3.000000) (0.000000, -1.000000)
+```
+
 ##### Copy
 
 源地址数据拷贝到目的地址。
@@ -3703,6 +3763,10 @@ result = 0  dotProd = 112.43
 
     HmppResult HMPPS\_Exp\_64f\(const double\* src, double\* dst, int32\_t len\);
 
+- **浮点复数的操作：**
+
+    HmppResult HMPPS\_Exp\_32fc\_A24\(const Hmpp32fc\* src, Hmpp32fc\* dst, int32\_t len\);
+
 - **浮点数的原地操作：**
 
     HmppResult HMPPS\_Exp\_32f\_I\(float\* srcDst, int32\_t len\);
@@ -3743,8 +3807,8 @@ result = 0  dotProd = 112.43
 |HMPP_STS_NULL_PTR_ERR|src、dst、srcDst这几个入参中存在空指针。|
 |HMPP_STS_SIZE_ERR|len小于或等于0。|
 |HMPP_STS_SCALE_ERR|scale不在(0,INF)范围内或输入为NaN。|
-|HMPP_STS_OVERFLOW|dst的计算结果超过了正最大规范数。|
-|HMPP_STS_UNDERFLOW|dst的计算结果小于正最小规范数。|
+|HMPP_STS_OVERFLOW|HMPPS_Exp_32f、HMPPS_Exp_64f、HMPPS_Exp_32fc_A24的计算结果超过了正最大规范数。|
+|HMPP_STS_UNDERFLOW|HMPPS_Exp_32f、HMPPS_Exp_64f、HMPPS_Exp_32fc_A24的计算结果小于正最小规范数。|
 
 **示例**
 
@@ -15728,13 +15792,71 @@ result: 0
 1 1 1 1 1 1 1
 ```
 
-##### Or
+##### Not
 
-将两个图像进行或运算。
+对图像进行像素按位取反。
 
 函数接口声明如下：
 
-HmppResult HMPPI_Or_8u_C1R(const uint8_t *pSrc1, int src1Step, const uint8_t*pSrc2, int src2Step, uint8_t *pDst, int dstStep, HmppiSize roiSize);
+HmppResult HMPPI_Not_8u_C1IR(uint8_t *pSrcDst, int srcDstStep, HmppiSize roiSize);
+
+**参数**
+
+|参数名|描述|取值范围|输入/输出|
+|--|--|--|--|
+|pSrcDst|指向源和目标图像感兴趣区域的指针（原地操作）。|非空|输入/输出|
+|srcDstStep|源和目标图像中连续行起点之间的距离（以字节为单位）。|正整数|输入|
+|roiSize|图像感兴趣区域的大小（以像素为单位）。|roiSize.width∈(0, INT_MAX]，roiSize.height∈(0, INT_MAX]|输入|
+
+**返回值**
+
+- 成功：返回HMPP\_STS\_NO\_ERR。
+- 失败：返回错误码。
+
+**错误码**
+
+|错误码|描述|
+|--|--|
+|HMPP_STS_NULL_PTR_ERR|pSrcDst存在空指针。|
+|HMPP_STS_STEP_ERR|srcDstStep小于或等于0。|
+|HMPP_STS_SIZE_ERR|roiSize.width或roiSize.height小于或等于0。|
+
+**示例**
+
+```c
+#include "hmppi.h"
+#include <stdint.h>
+#include <stdio.h>
+
+int main(void)
+{
+    uint8_t srcDst[8] = {0x00, 0x0F, 0xF0, 0xAA, 0x55, 0x80, 0x7F, 0x33};
+    HmppResult ret = HMPPI_Not_8u_C1IR(srcDst, 4, (HmppiSize){4, 2});
+    printf("ret=%d\n", ret);
+    for (int i = 0; i < 8; ++i) {
+        printf("%02X ", srcDst[i]);
+    }
+    printf("\n");
+    return 0;
+}
+```
+
+运行结果：
+
+```text
+ret=0
+FF F0 0F 55 AA 7F 80 CC
+```
+
+##### Or
+
+将两个图像进行按位或运算。
+
+函数接口声明如下：
+
+HmppResult HMPPI_Or_8u_C1R(const uint8_t *pSrc1, int src1Step, const uint8_t *pSrc2, int src2Step, uint8_t *pDst, int dstStep, HmppiSize roiSize);
+
+HmppResult HMPPI_Or_8u_C1IR(const uint8_t *pSrc, int srcStep, uint8_t *pSrcDst, int srcDstStep, HmppiSize roiSize);
 
 **参数**
 
@@ -15746,6 +15868,10 @@ HmppResult HMPPI_Or_8u_C1R(const uint8_t *pSrc1, int src1Step, const uint8_t*pSr
 | src2Step | 源图像2中连续行起点之间的距离（以字节为单位）。  | 非负整数                                                | 输入      |
 | pDst     | 指向目标图像的指针。                             | 非空                                                    | 输出      |
 | dstStep  | 目标图像中连续行起点之间的距离（以字节为单位）。 | 非负整数                                                | 输入      |
+| pSrc     | 指向源图像感兴趣区域的指针。                | 非空                                                    | 输入      |
+| srcStep  | 源图像中连续行起点之间的距离（以字节为单位）。| 正整数                                             | 输入      |
+| pSrcDst  | 指向源图像和目标图像感兴趣区域的指针。    | 非空                                                    | 输入/输出 |
+| srcDstStep | 源图像和目标图像中连续行起点之间的距离（以字节为单位）。 | 正整数                                      | 输入      |
 | roiSize  | 源和目标图像感兴趣区域的大小（以像素为单位）。   | roiSize.width∈(0, INT_MAX]，roiSize.height∈(0, INT_MAX] | 输出      |
 
 **返回值**
@@ -15757,8 +15883,8 @@ HmppResult HMPPI_Or_8u_C1R(const uint8_t *pSrc1, int src1Step, const uint8_t*pSr
 
 | 错误码                | 描述                                       |
 | --------------------- | ------------------------------------------ |
-| HMPP_STS_NULL_PTR_ERR | pSrc1、pSrc2、pDst存在空指针。             |
-| HMPP_STS_STEP_ERR     | src1Step、src2Step、dstStep小于或等于0.    |
+| HMPP_STS_NULL_PTR_ERR | pSrc1、pSrc2、pDst、pSrc、pSrcDst中存在空指针。 |
+| HMPP_STS_STEP_ERR     | src1Step、src2Step、dstStep、srcStep、srcDstStep中存在小于或等于0的值。 |
 | HMPP_STS_SIZE_ERR     | roiSize.width、roiSize.height小于或等于0。 |
 
 **示例**
@@ -16157,7 +16283,11 @@ int main()
 
 函数接口声明如下：
 
-HmppResult HMPPI_Set_64f_C1R(double value, double *dst, HmppiSize dstSize);
+HmppResult HMPPI_Set_64f_C1R(double value, double *dst, HmppiSize roiSize);
+
+HmppResult HMPPI_Set_8u_C1R(uint8_t value, uint8_t *dst, int32_t dstStep, HmppiSize roiSize);
+
+HmppResult HMPPI_Set_32f_C1R(float value, float *dst, int32_t dstStep, HmppiSize roiSize);
 
 **参数**
 
@@ -16165,7 +16295,8 @@ HmppResult HMPPI_Set_64f_C1R(double value, double *dst, HmppiSize dstSize);
 |--|--|--|--|
 |dst|指向目标图像感兴趣区域的指针。|非空|输入/输出|
 |value|需要初始化的像素值。|数据类型范围内的值|输入|
-|dstSize|目标图像感兴趣区域的大小。|正整数|输入|
+|dstStep|目标图像中连续行起点之间的距离（以字节为单位）。|整数|输入|
+|roiSize|目标图像感兴趣区域的大小。|正整数|输入|
 
 **返回值**
 
@@ -16177,39 +16308,23 @@ HmppResult HMPPI_Set_64f_C1R(double value, double *dst, HmppiSize dstSize);
 |错误码|描述|
 |--|--|
 |HMPP_STS_NULL_PTR_ERR|dst中存在空指针。|
-|HMPP_STS_SIZE_ERR|dstSize的字段为零或负值。|
-|HMPP_STS_NO_ERR|返回值正确，任何其他值表示错误或警告。|
+|HMPP_STS_SIZE_ERR|roiSize的字段为零或负值。|
 
 **示例**
 
 ```c
-#include <stdio.h>
 #include "hmppi.h"
-#include "hmpp_type.h"
+#include <stdio.h>
 
-void SetExample()
+int main(void)
 {
-    double value = 0.0;
-    HmppiSize dstSize = {4, 4};
-    double *dst = (double *)malloc(dstSize.height * dstSize.width * sizeof(double));
-    
-    HmppResult result = HMPPI_Set_64f_C1R(value, dst, dstSize);
-    printf("result = %d\n", result);
-    
-    if (result != HMPP_STS_NO_ERR) {
-        return;
-    }
-    for (int y = 0; y < dstSize.height; ++y) {
-        for (int x = 0; x < dstSize.width; ++x) {
-            printf("%f ", dst[y * dstSize.width + x]);
-        }
+    float dst[8] = {0};
+    HmppResult ret = HMPPI_Set_32f_C1R(1.25f, dst, 4 * (int)sizeof(float), (HmppiSize){4, 2});
+    printf("ret=%d\n", ret);
+    for (int i = 0; i < 8; ++i) {
+        printf("%.2f ", dst[i]);
     }
     printf("\n");
-}
- 
-int main()
-{
-    SetExample();
     return 0;
 }
 ```
@@ -16217,8 +16332,8 @@ int main()
 运行结果：
 
 ```text
-result = 0
-0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000
+ret=0
+1.25 1.25 1.25 1.25 1.25 1.25 1.25 1.25
 ```
 
 ##### Sub
@@ -16292,6 +16407,68 @@ int main() {
 ```text
 result = 0
 dst = 7.90 2.14 3.19 -4.48 4.79 3.33 -4.18 13.74 -5.17 4.29
+```
+
+##### Transpose
+
+对图像执行转置操作。
+
+函数接口声明如下：
+
+HmppResult HMPPI_Transpose_16s_C1R(const int16_t *pSrc, int srcStep, int16_t *pDst, int dstStep, HmppiSize roiSize);
+
+HmppResult HMPPI_Transpose_32s_C1R(const int32_t *pSrc, int srcStep, int32_t *pDst, int dstStep, HmppiSize roiSize);
+
+HmppResult HMPPI_Transpose_32f_C1R(const float *pSrc, int srcStep, float *pDst, int dstStep, HmppiSize roiSize);
+
+**参数**
+
+|参数名|描述|取值范围|输入/输出|
+|--|--|--|--|
+|pSrc|指向源图像感兴趣区域的指针。|非空|输入|
+|srcStep|源图像中连续行起点之间的距离（以字节为单位）。|整数|输入|
+|pDst|指向目标图像感兴趣区域的指针。|非空|输出|
+|dstStep|目标图像中连续行起点之间的距离（以字节为单位）。|整数|输入|
+|roiSize|源图像感兴趣区域大小（以像素为单位）。|roiSize.width∈(0, INT_MAX]，roiSize.height∈(0, INT_MAX]|输入|
+
+**返回值**
+
+- 成功：返回HMPP\_STS\_NO\_ERR。
+- 失败：返回错误码。
+
+**错误码**
+
+|错误码|描述|
+|--|--|
+|HMPP_STS_NULL_PTR_ERR|pSrc或pDst中存在空指针。|
+|HMPP_STS_SIZE_ERR|roiSize.width或roiSize.height小于或等于0。|
+
+**示例**
+
+```c
+#include "hmppi.h"
+#include <stdint.h>
+#include <stdio.h>
+
+int main(void)
+{
+    int32_t src[6] = {10, 20, 30, 40, 50, 60};
+    int32_t dst[6] = {0};
+    HmppResult ret = HMPPI_Transpose_32s_C1R(src, 3 * (int)sizeof(int32_t), dst, 2 * (int)sizeof(int32_t), (HmppiSize){3, 2});
+    printf("ret=%d\n", ret);
+    for (int i = 0; i < 6; ++i) {
+        printf("%d ", dst[i]);
+    }
+    printf("\n");
+    return 0;
+}
+```
+
+运行结果：
+
+```text
+ret=0
+10 40 20 50 30 60
 ```
 
 ##### Threshold
@@ -21818,9 +21995,9 @@ result = 0
 
     HmppResult HMPPI\_WarpAffineNearestInit\(HmppiSize srcSize, HmppiSize dstSize, double coeffs\[2\]\[3\], double xCenter, double yCenter, double angle, HmppiWarpDirection direction, HmppiBorderType borderType, double borderValue, int smoothEdge, HmppiWarpPolicy\*\* pSpec\);
 
-    HmppResult HMPPI\_Set\_64f\_C1R\(double value, double \*dst, HmppiSize dstSize\);
+    HmppResult HMPPI\_Set\_64f\_C1R\(double value, double \*dst, HmppiSize roiSize\);
 
-    HmppResult HMPPI\_Set\_8u\_C1R\(uint8_t value, uint8_t \*dst, HmppiSize dstSize\);
+    HmppResult HMPPI\_Set\_8u\_C1R\(uint8_t value, uint8_t \*dst, int32_t dstStep, HmppiSize roiSize\);
 
 - **主函数：**
 

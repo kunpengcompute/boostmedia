@@ -23,11 +23,19 @@
 </tr>
 <tr id="row14686327258"><th class="firstcol" valign="top" width="42.17%" id="mcps1.1.3.4.1"><p id="p15758185814610"><a name="p15758185814610"></a><a name="p15758185814610"></a>软件包版本</p>
 </th>
-<td class="cellrowborder" valign="top" width="57.830000000000005%" headers="mcps1.1.3.4.1 "><p id="p875815585616"><a name="p875815585616"></a><a name="p875815585616"></a>2.6.0.beta1</p>
+<td class="cellrowborder" valign="top" width="57.830000000000005%" headers="mcps1.1.3.4.1 "><p id="p875815585616"><a name="p875815585616"></a><a name="p875815585616"></a>2.6.1.beta1</p>
 </td>
 </tr>
 </tbody>
 </table>
+
+## v2.6.1.beta1
+
+### 更新说明
+
+| 函数库 | HMPPS（信号库） | HMPPI（图像库）|
+| ---- | ---- | ---- |
+|  新增特性 | <li>HMPPS_Exp_32fc_A24</li> <li>HMPPS_ConjPack_32f_I</li>   | <li>HMPPI_Transpose_16s_C1R</li> <li>HMPPI_Transpose_32s_C1R</li>  <li>HMPPI_Transpose_32f_C1R</li> <li>HMPPI_Set_8u_C1R</li> <li>HMPPI_Set_32f_C1R</li> <li>HMPPI_Not_8u_C1IR</li> <li>HMPPI_Or_8u_C1IR</li> |
 
 ## v2.6.0.beta1
 

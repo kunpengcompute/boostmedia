@@ -18,7 +18,7 @@ HMPP包含基础函数库、信号库、图像库，其特性说明如下表所�
 
 | 版本 | 变更 |
 | -- | -- |
-| v2.6.1.beta1  | 新增HMPPS_Exp_32fc_A24、HMPPS_ConjPack_32f_I、HMPPI_Transpose_16s_C1R、HMPPI_Transpose_32s_C1R、HMPPI_Transpose_32f_C1R、HMPPI_Set_8u_C1R、HMPPI_Set_32f_C1R、HMPPI_Not_8u_C1IR、HMPPI_Or_8u_C1IR算子。   |
+| v2.6.1.beta1  | 新增HMPPS_Exp_32fc_A24、HMPPS_ConjPack_32fc_I、HMPPI_Transpose_16s_C1R、HMPPI_Transpose_32s_C1R、HMPPI_Transpose_32f_C1R、HMPPI_Set_8u_C1R、HMPPI_Set_32f_C1R、HMPPI_Not_8u_C1IR、HMPPI_Or_8u_C1IR算子。   |
 | v2.6.0.beta1  | 新增HMPPS_Sin_64f_A50、HMPPS_Tan_64f_A50、HMPPS_Asin_32f_A24、HMPPI_Or_8u_C1R、HMPPI_FilterMinBorder_8u_C1R、HMPPI_WarpAffineNearest_8u_C1R、HMPPI_Conv_8u_C1R、HMPPI_Conv_32f_C1R、HMPPI_ResizeLinearInit_16s、HMPPI_ResizeLinear_16s_C1R、HMPPI_ResizeNearestInit_8u、HMPPI_ResizeNearest_8u_C1R算子。   |
 
 更多历史版本信息具体请参见[HMPP版本说明书](./docs/zh/release_notes.md)。

@@ -35,7 +35,7 @@
 
 | 函数库 | HMPPS（信号库） | HMPPI（图像库）|
 | ---- | ---- | ---- |
-|  新增特性 | <li>HMPPS_Exp_32fc_A24</li> <li>HMPPS_ConjPack_32f_I</li>   | <li>HMPPI_Transpose_16s_C1R</li> <li>HMPPI_Transpose_32s_C1R</li>  <li>HMPPI_Transpose_32f_C1R</li> <li>HMPPI_Set_8u_C1R</li> <li>HMPPI_Set_32f_C1R</li> <li>HMPPI_Not_8u_C1IR</li> <li>HMPPI_Or_8u_C1IR</li> |
+|  新增特性 | <li>HMPPS_Exp_32fc_A24</li> <li>HMPPS_ConjPack_32fc_I</li>   | <li>HMPPI_Transpose_16s_C1R</li> <li>HMPPI_Transpose_32s_C1R</li>  <li>HMPPI_Transpose_32f_C1R</li> <li>HMPPI_Set_8u_C1R</li> <li>HMPPI_Set_32f_C1R</li> <li>HMPPI_Not_8u_C1IR</li> <li>HMPPI_Or_8u_C1IR</li> |
 
 ## v2.6.0.beta1
 

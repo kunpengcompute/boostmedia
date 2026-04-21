@@ -4,14 +4,14 @@
 
 ## 通过FFmpeg调用x265进行视频编码操作
 
-- 添加依赖库环境变量。
+1. 添加依赖库环境变量。
 
     ```shell
     export LD_LIBRARY_PATH=/home/ffmpeg/install/lib:/home/x265/x265_install/lib
     export PKG_CONFIG_PATH=/home/x265/x265_install/lib/pkgconfig/
     ```
 
-- 开始执行编码程序。相关参数的解释说明如下表所示。
+2. 开始执行编码程序。相关参数的解释说明如下表所示。
 
     ```shell
     /home/ffmpeg/install/bin/ffmpeg -s 1920x1080 -framerate 60 -i input.yuv -preset medium -c:v libx265 -x265-params "bitrate=2000:vbv-maxrate=2000:vbv-bufsize=2000" -f mp4 output.mp4
@@ -27,7 +27,7 @@
     |-c:v libx265|指定使用libx265编码器进行视频编码。|
     |-x265-params "bitrate=2000:vbv-maxrate=2000:vbv-bufsize=2000"|设置x265编码器的参数，包括码率、最大码率、缓冲区大小。|
     |-f mp4 output.mp4|指定输出格式为mp4，可指定其他类型。|
-    
+
     回显编码帧数及编码时间则表示编码成功，如：
 
     ```shell

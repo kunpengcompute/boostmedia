@@ -2,41 +2,46 @@
 
 本文提供x265的安装指南，请按照以下步骤进行安装。
 
-## 环境配置
+## 环境要求
 
-硬件环境：
+**硬件环境**
 
 | 项目 | 说明 |
 | ---- | ---- |
 | CPU | 鲲鹏920新型号 |
 
-软件环境：
+**操作系统要求**
 
-| 软件  | 版本    |
+| 项目  | 版本    |
 | ------------ | ------------ |
 | OS | openEuler 22.03 LTS SP4 |
+
+**软件环境**
+
+| 项目  | 版本    |
+| ------------ | ------------ |
 | 编译器 | gcc ≥ 10.3.1 |
 | make |  ≥ 4.3 |
 | cmake | ≥ 3.10 |
 
 ## 安装x265
 
-- 用户获取x265的软件包后，按照如下步骤进行安装。
+用户获取x265的软件包后，按照如下步骤进行安装。
 
-- 创建安装目录，可自定义。
+1. 创建安装目录，可自定义。
 
     ```shell
     mkdir -p /home/x265/
     ```
 
-- 解压软件包，并拷贝到安装目录。
+2. 解压软件包，并拷贝到安装目录。
 
     ```shell
     unzip x265_install.zip
     cp -r x265_install /home/x265/
     ```
 
-- 修改pkg-config配置文件的prefix项为x265安装目录。
+3. 修改pkg-config配置文件的prefix项为x265安装目录。
 
     ```shell
     sed -i 's|^prefix=.*|prefix=/home/x265/x265_install|' /home/x265/x265_install/lib/pkgconfig/x265.pc
@@ -44,9 +49,9 @@
 
 ## 安装FFmpeg
 
-- 通过FFmpeg可以调用x265进行视频编码操作，因此需要安装FFmpeg。安装完成后通过查看FFmpeg版本检查是否安装成功。编译安装过程中使用的安装目录、源代码目录和编译目录均可自定义，本文中给出的目录仅为示例。
+通过FFmpeg可以调用x265进行视频编码操作，因此需要安装FFmpeg。安装完成后通过查看FFmpeg版本检查是否安装成功。编译安装过程中使用的安装目录、源代码目录和编译目录均可自定义，本文中给出的目录仅为示例。
 
-- 获取FFmpeg压缩包并解压。
+1. 获取FFmpeg压缩包并解压。
 
     ```shell
     cd /home
@@ -54,14 +59,14 @@
     tar -zxvf ffmpeg-6.0.1.tar.gz
     ```
 
-- 创建编译和安装目录。
+2. 创建编译和安装目录。
 
     ```shell
     mkdir -p /home/ffmpeg-6.0.1/build
     mkdir -p /home/ffmpeg-6.0.1/install
     ```
 
-- 配置编译参数。相关参数的解释说明如下表所示。
+3. 配置编译参数。相关参数的解释说明如下表所示。
 
     ```shell
     export PKG_CONFIG_PATH=/home/x265/x265_install/lib/pkgconfig/
@@ -84,20 +89,20 @@
     |--extra-ldflags="-L/home/x265/x265_install/lib -lm -lstdc++"|添加额外的链接器参数，指定x265库的链接库路径，并链接标准数学库和C++标准库。|
     |--prefix=/home/ffmpeg/install|指定安装目录的前缀，编译完成后将安装到指定目录下。|
 
-- 编译安装。
+4. 编译安装。
 
     ```shell
     make -j 32
     make install
     ```
 
-- 进入FFmpeg安装目录。
+5. 进入FFmpeg安装目录。
 
     ```shell
     cd /home/ffmpeg/install/bin
     ```
 
-- 查看FFmpeg版本。
+6. 查看FFmpeg版本。
 
     ```shell
     ./ffmpeg

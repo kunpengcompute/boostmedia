@@ -4,7 +4,7 @@
 
 ## 架构图
 
-![arch.png](https://raw.gitcode.com/user-images/assets/9361804/8a6da15b-7a38-4e14-9bd9-82dfdf4f1d0d/arch.png 'arch.png')
+![arch.png](https://raw.gitcode.com/user-images/assets/7320454/9e840ea7-d024-4971-9c22-dfbce3ad66b3/arch.png 'arch.png')
 
 ## 特性介绍
 
@@ -18,7 +18,7 @@
 
 |  特性| 特性介绍  | 仓库路径  |
 |--|--|--|
-| HW265Enc | HW265Enc编码器是遵循H.265/HEVC（High Efficiency Video Coding）视频编解码标准开发的自研视频编码器，基于鲲鹏920新型号处理器实现编码库亲和优化，支持对YUV像素文件进行编码生成H.265/HEVC视频码流文件，支持8bit色彩深度、420p格式 | **代码仓待开源** |
+| HW265 | HW265编码器是遵循H.265/HEVC（High Efficiency Video Coding）视频编解码标准开发的自研视频编码器，基于鲲鹏920新型号处理器实现编码库亲和优化，支持对YUV像素文件进行编码生成H.265/HEVC视频码流文件，支持8bit色彩深度、420p格式 | **代码仓待开源** |
 | x265 | 针对开源x265编码库中的转码底层算子使用鲲鹏向量指令进行加速优化，提高整体性能 | [x265文档](./docs/x265/README.md) <br>**仅提供文档仓路径，代码仓待开源。** |
 | VVenC | 针对开源VVenC编码库中的转码底层算子使用鲲鹏向量指令进行加速优化，提高整体性能 | **代码仓待开源** |
 

@@ -43,10 +43,10 @@
 
     ```shell
     # rpm
-    rpm -ivh boostkit-hmpp-xxxx-1.aarch64.rpm
+    rpm -ivh boostmedia-hmpp-xxxx-1.aarch64.rpm
 
     # deb
-    dpkg -i boostkit-hmpp-xxxx.aarch64.deb
+    dpkg -i boostmedia-hmpp-xxxx.aarch64.deb
     ```
 
     xxx表示版本号。
@@ -64,8 +64,8 @@
 
     ```shell
     # rpm
-    rpm -e boostkit-hmpp-xxxx-1
+    rpm -e boostmedia-hmpp-xxxx-1
 
     # deb
-    dpkg -r boostkit-hmpp
+    dpkg -r boostmedia-hmpp
     ```

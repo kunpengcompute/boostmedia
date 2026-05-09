@@ -953,13 +953,13 @@ void  HMPP_GetProductVersion_Example()
 运行结果：
 
 ```text
-Product Name: Kunpeng Boostkit
-Product Version: 23.0.RC2
-Component Name: BoostKit-hmpp
-Component Version: 1.7.0
+Product Name: Kunpeng BoostKit
+Product Version: 26.0.0
+Component Name: BoostMedia-HMPP
+Component Version: 2.6.1.beta1
 Component AppendInfo: gcc
-Software Name: boostkit-hmpp
-Software Version: 1.7.0
+Software Name: boostmedia-hmpp
+Software Version: 2.6.1.beta1
 ```
 
 >![](public_sys-resources/icon-note.gif) **说明：** 

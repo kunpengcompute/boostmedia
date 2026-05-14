@@ -6,9 +6,19 @@
 
 **问题现象描述**
 
-头文件包含错误：“fatal error: hmpp.h: No such file or directory”
+头文件包含错误：
 
-引用动态库错误：“./test: error while loading shared libraries: libHMPP_core.so.**xxxx**: cannot open shared object file: No such file or directory” 上述现象结果中涉及的**xxxx**代表版本号。
+```
+fatal error: hmpp.h: No such file or directory
+```
+
+引用动态库错误：
+
+```
+./test: error while loading shared libraries: libHMPP_core.so.**xxxx**: cannot open shared object file: No such file or directory
+```
+
+上述现象结果中涉及的**xxxx**代表版本号。
 
 **关键过程、根本原因分析**
 
@@ -18,28 +28,35 @@
 
 **结论、解决方案及结果**
 
-步骤一：检查HMPP是否已安装
+ 1. 检查HMPP是否已安装。
 
-通过以下命令查找是否存在HMPP头文件和动态库，如果不存在需重新安装HMPP。
-    
+    通过以下命令查找是否存在HMPP头文件和动态库，如果不存在则需要重新安装HMPP。
+
+    ```bash
     ll /usr/local/include/HMPP
     ll /usr/local/lib/HMPP
+    ```
     
-步骤二：添加环境变量
+ 2. 添加环境变量。
 
-打开“/etc/profile“文件。
-    
-    vi /etc/profile
-    
-在文件中添加如下环境变量。
+     1. 打开“/etc/profile“文件。
+        
+        ```bash
+        vi /etc/profile
+        ```
+        
+     2. 在文件中添加如下环境变量。
 
-    export C_INCLUDE_PATH=$C_INCLUDE_PATH:/usr/local/include/HMPP
-    export CPLUS_INCLUDE_PATH=$CPLUS_INCLUDE_PATH:/usr/local/include/HMPP
-    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/HMPP
+        ```bash
+        export C_INCLUDE_PATH=$C_INCLUDE_PATH:/usr/local/include/HMPP
+        export CPLUS_INCLUDE_PATH=$CPLUS_INCLUDE_PATH:/usr/local/include/HMPP
+        export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/HMPP
+        ```
 
-按“**Esc**”键，输入**:wq!**，按“**Enter**”保存并退出编辑。
+     3. 按`Esc`键，输入 **:wq!**，按`Enter`保存并退出编辑。
 
-使配置文件生效。
+     4. 使配置文件生效。
 
-    source /etc/profile
-    
+        ```bash
+        source /etc/profile
+        ```

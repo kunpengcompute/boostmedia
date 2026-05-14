@@ -20,9 +20,9 @@
 
 | 项目  | 版本    |
 | ------------ | ------------ |
-| 编译器 | gcc ≥ 10.3.1 |
-| make |  ≥ 4.3 |
-| cmake | ≥ 3.10 |
+| 编译器 | GCC 10.3.1或之后的版本 |
+| make |  4.3或之后的版本 |
+| cmake | 3.10或之后的版本 |
 
 ## 安装x265
 
@@ -108,4 +108,4 @@
     ./ffmpeg
     ```
 
-    出现“ffmpeg version 6.0.1 Copyright (c) 2000-2023 the FFmpeg developers”则表示安装成功。
+    出现`ffmpeg version 6.0.1 Copyright (c) 2000-2023 the FFmpeg developers`则表示安装成功。

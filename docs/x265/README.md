@@ -34,9 +34,9 @@ SVE优化后的x265版本仅适用于支持ARM SVE指令集的设备，如果您
 
 [x265官方文档](http://x265.readthedocs.org/en/master/)。
 
-[x265开发者wiki](http://bitbucket.org/multicoreware/x265_git/wiki/)。
+[x265开发者Wiki](http://bitbucket.org/multicoreware/x265_git/wiki/)。
 
-## License
+## LICENSE
 
 本项目采用GPL v2许可证，详见[COPYING](./COPYING)文件。
 

@@ -15,9 +15,9 @@
 | 软件  | 版本    |
 | ------------ | ------------ |
 | OS | openEuler 22.03 LTS SP4 |
-| 编译器 | gcc ≥ 10.3.1 |
-| make |  ≥ 4.3 |
-| cmake | ≥ 3.10 |
+| 编译器 | GCC 10.3.1或以上版本 |
+| make |  4.3或以上版本 |
+| cmake | 3.10或以上版本 |
 
 ## 安装依赖库
 
@@ -33,11 +33,11 @@
     cp lib/* /usr/local/lib/libboundscheck
     ```
 
-- 安装鲲鹏数学库KML，KML的安装与使用请参见《[鲲鹏数学库 开发指南](https://www.hikunpeng.com/document/detail/zh/kunpengaccel/math-lib/devg-kml/kunpengaccel_kml_0001.html)》安装到默认目录（/usr/local/kml）。
+- 安装鲲鹏数学库KML，KML的安装与使用请参见《[鲲鹏数学库 开发指南](https://www.hikunpeng.com/document/detail/zh/kunpengaccel/math-lib/devg-kml/kunpengaccel_kml_0001.html)》安装到默认目录`/usr/local/kml`。
 
 ## 软件包安装HMPP
 
-- 用户获取rpm包或deb包后（选其一即可），按照如下步骤进行安装。
+用户获取RPM包或deb包后（选其一即可），按照如下步骤进行安装。
 
 - 安装HMPP。
 
@@ -63,9 +63,11 @@
 - 卸载HMPP。
 
     ```shell
-    # rpm
+    # RPM
     rpm -e boostmedia-hmpp-xxxx-1
+    ```
 
+    ```shell
     # deb
     dpkg -r boostmedia-hmpp
     ```

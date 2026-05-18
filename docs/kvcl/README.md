@@ -2,7 +2,7 @@
 
 ## 最新消息
 
-- [2026.03.30]: 发布KVCL1.0.0版本。新增KvclDct16x16、KvclDct32x32、KvclIDct16x16、KvclLumaVPP32x32、KvclLumaVPP64x64、KvclLumaHPP32x32、KvclLumaHPP64x64、KvclChromaHPP32x32、KvclChromaHPP16x16、KvclScanPosLast、KvclQuantRdoq、KvclSad64x32、KvclSad64x64、KvclSad4x32x32、KvclSad4x32x64、KvclSad4x64x16、KvclSad4x64x32、KvclSad4x64x64、KvclSaoCuStatsE0、KvclSaoCuStatsE1、KvclSaoCuStatsE2、KvclSaoCuStatsE3、KvclSatd8x8、KvclSatd16x16、KvclSa8d8x8、KvclSa8d16x16算子。
+- [2026.03.30]: 发布KVCL 1.0.0版本。新增KvclDct16x16、KvclDct32x32、KvclIDct16x16、KvclLumaVPP32x32、KvclLumaVPP64x64、KvclLumaHPP32x32、KvclLumaHPP64x64、KvclChromaHPP32x32、KvclChromaHPP16x16、KvclScanPosLast、KvclQuantRdoq、KvclSad64x32、KvclSad64x64、KvclSad4x32x32、KvclSad4x32x64、KvclSad4x64x16、KvclSad4x64x32、KvclSad4x64x64、KvclSaoCuStatsE0、KvclSaoCuStatsE1、KvclSaoCuStatsE2、KvclSaoCuStatsE3、KvclSatd8x8、KvclSatd16x16、KvclSa8d8x8、KvclSa8d16x16算子。
 
 ## 简介
 

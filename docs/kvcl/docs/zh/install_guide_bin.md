@@ -27,7 +27,8 @@ echo 16 > /proc/sys/abi/sve_default_vector_length
 
 ## 部署
 
-获取KVCL二进制包，运行以下命令解压。
+从GitCode仓获取KVCL二进制包[BoostKit-boostmedia-kvcl_1.0.0.zip](https://gitcode.com/boostkit/boostmedia/releases/download/v1.0.0/BoostKit-boostmedia-kvcl_1.0.0.zip
+)，运行以下命令解压。
 
 ```shell
 unzip BoostKit-boostmedia-kvcl_1.0.0.zip

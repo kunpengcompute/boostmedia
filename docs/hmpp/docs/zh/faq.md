@@ -8,13 +8,13 @@
 
 头文件包含错误：
 
-```
+```shell
 fatal error: hmpp.h: No such file or directory
 ```
 
 引用动态库错误：
 
-```
+```shell
 ./test: error while loading shared libraries: libHMPP_core.so.**xxxx**: cannot open shared object file: No such file or directory
 ```
 
@@ -48,9 +48,9 @@ fatal error: hmpp.h: No such file or directory
      2. 在文件中添加如下环境变量。
 
         ```bash
-        export C_INCLUDE_PATH=$C_INCLUDE_PATH:/usr/local/include/HMPP
-        export CPLUS_INCLUDE_PATH=$CPLUS_INCLUDE_PATH:/usr/local/include/HMPP
-        export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/HMPP
+        export C_INCLUDE_PATH=/usr/local/include/HMPP:$C_INCLUDE_PATH
+        export CPLUS_INCLUDE_PATH=/usr/local/include/HMPP:$CPLUS_INCLUDE_PATH
+        export LD_LIBRARY_PATH=/usr/local/lib/HMPP:$LD_LIBRARY_PATH
         ```
 
      3. 按`Esc`键，输入 **:wq!**，按`Enter`保存并退出编辑。

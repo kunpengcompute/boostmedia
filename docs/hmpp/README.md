@@ -18,6 +18,7 @@ HMPP包含基础函数库、信号库、图像库，其特性说明如下表所�
 
 | 版本 | 变更 |
 | -- | -- |
+| v2.6.2.beta1  | 修改部分枚举的值，并优化了以下算子的性能：HMPPS_Convolve_32f、HMPPI_FloodFill_4Con_8u_C1IR、HMPPS_Powx_32f_A11、HMPPS_VectorJaehne_32f、HMPPS_FFTRToC_32f、HMPPS_FFTCToC_32fc、HMPPS_FFTCToC_32fc_I、HMPPS_FFTCToC_32f、HMPPS_DFTCToC_32fc、HMPPI_LabelMarkers_8u_C1IR、HMPPS_DFTRToC_32f、HMPPS_DFTCToR_32f、HMPPI_ErodeBorder_8u_C1R、HMPPI_DilateBorder_8u_C1R、HMPPS_FFTCToC_64fc、HMPPS_FFTCToC_64f、HMPPS_FilterMedian_32f| 
 | v2.6.1.beta1  | 新增HMPPS_Exp_32fc_A24、HMPPS_ConjPack_32fc_I、HMPPI_Transpose_16s_C1R、HMPPI_Transpose_32s_C1R、HMPPI_Transpose_32f_C1R、HMPPI_Set_8u_C1R、HMPPI_Set_32f_C1R、HMPPI_Not_8u_C1IR、HMPPI_Or_8u_C1IR算子。   |
 | v2.6.0.beta1  | 新增HMPPS_Sin_64f_A50、HMPPS_Tan_64f_A50、HMPPS_Asin_32f_A24、HMPPI_Or_8u_C1R、HMPPI_FilterMinBorder_8u_C1R、HMPPI_WarpAffineNearest_8u_C1R、HMPPI_Conv_8u_C1R、HMPPI_Conv_32f_C1R、HMPPI_ResizeLinearInit_16s、HMPPI_ResizeLinear_16s_C1R、HMPPI_ResizeNearestInit_8u、HMPPI_ResizeNearest_8u_C1R算子。   |
 

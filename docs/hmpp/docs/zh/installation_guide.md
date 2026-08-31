@@ -47,7 +47,7 @@
 
 ## 软件包安装HMPP
 
-从GitCode仓获取HMPP软件包[BoostKit-boostmedia-hmpp_2.6.1.beta1.zip](https://gitcode.com/boostkit/boostmedia/releases/download/v1.0.2-beta1/BoostKit-boostmedia-hmpp_2.6.1.beta1.zip)，解压后得到rpm包或deb包（选其一即可），按照步骤进行安装。
+从GitCode仓获取HMPP软件包[BoostKit-boostmedia-hmpp_2.6.2.beta1.zip](https://gitcode.com/boostkit/boostmedia/releases/download/v1.0.3-beta1/BoostKit-boostmedia-hmpp_2.6.2.beta1.zip)，解压后得到rpm包或deb包（选其一即可），按照步骤进行安装。
 
   1. 解压软件包
 

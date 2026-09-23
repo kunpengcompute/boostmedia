@@ -47,7 +47,40 @@
 
 ## 软件包安装HMPP
 
-从GitCode仓获取HMPP软件包[BoostKit-boostmedia-hmpp_2.6.2.beta1.zip](https://gitcode.com/boostkit/boostmedia/releases/download/v1.0.3-beta1/BoostKit-boostmedia-hmpp_2.6.2.beta1.zip)，解压后得到rpm包或deb包（选其一即可），按照步骤进行安装。
+### 获取软件包
+
+从GitCode仓获取HMPP软件包[BoostKit-boostmedia-hmpp_2.6.2.beta1.zip](https://gitcode.com/boostkit/boostmedia/releases/download/v1.0.3-beta1/BoostKit-boostmedia-hmpp_2.6.2.beta1.zip)。
+
+### 软件包完整性校验
+
+为了防止软件包在传递过程或存储期间被恶意篡改，需下载对应的SHA256文件用于完整性验证。
+
+1. 从GitCode仓获取HMPP软件包对应的SHA256文件[BoostKit-boostmedia-hmpp_2.6.2.beta1.zip.sha256sum](https://gitcode.com/boostkit/boostmedia/releases/download/v1.0.3-beta1/BoostKit-boostmedia-hmpp_2.6.2.beta1.zip.sha256sum)。
+
+2. 计算文件的sha256校验值。linux执行命令如下：
+
+    ```bash
+    sha256sum <package>
+    ```
+
+    windows执行命令如下：
+
+    ```bash
+    certutil -hashfile <package> SHA256
+    ```
+
+    命令执行完成后，输出校验值。
+
+3. 对比计算的校验值和SHA文件中的校验值是否一致，如果校验值一致说明文件完整，如果校验值不一致则可以确认文件完整性已被破坏，需要重新获取。
+
+>![](./public_sys-resources/icon-note.gif) **说明：**
+>
+>- 如果校验失败，请不要使用该软件包，通过提交ISSUE反馈。
+>- 使用软件包安装/升级之前，也需要按上述过程先校验软件包的SHA256值，确保软件包未被篡改。
+
+### 软件包安装
+
+软件包解压后得到rpm包和deb包（选其一安装即可），按照以下步骤进行安装。
 
   1. 解压软件包
 

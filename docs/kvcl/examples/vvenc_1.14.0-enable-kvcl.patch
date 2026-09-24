@@ -1,0 +1,293 @@
+diff --git a/source/Lib/CommonLib/TrQuant.cpp b/source/Lib/CommonLib/TrQuant.cpp
+index 5cd9cfa..a37d860 100644
+--- a/source/Lib/CommonLib/TrQuant.cpp
++++ b/source/Lib/CommonLib/TrQuant.cpp
+@@ -550,8 +550,17 @@ void TrQuant::xT( const TransformUnit& tu, const ComponentID compID, const CPelB
+     const int shift_2nd =  (Log2(height))            + TRANSFORM_MATRIX_SHIFT;
+     CHECK( shift_1st < 0, "Negative shift" );
+     CHECK( shift_2nd < 0, "Negative shift" );
+-    fastFwdTrans[trTypeHor][transformWidthIndex](block, tmp, shift_1st, height, 0, skipWidth);
+-    fastFwdTrans[trTypeVer][transformHeightIndex](tmp, dstCoeff.buf, shift_2nd, width, skipWidth, skipHeight);
++    if (trTypeHor == DCT2 && transformWidthIndex == 3 && bitDepth == 8 && height == 16) {
++      KvclVvcDct16x16(block, dstCoeff.buf, width, width - skipWidth, height - skipHeight);
++    } else if(trTypeHor == DCT2 && transformWidthIndex == 4 && bitDepth == 8 && height == 32) {
++      KvclVvcDct32x32(block, dstCoeff.buf, width, width - skipWidth, height - skipHeight);
++    } else if(trTypeHor == DCT2 && transformWidthIndex == 5 && bitDepth == 8 && height == 64) {
++      KvclVvcDct64x64(block, dstCoeff.buf, width, width - skipWidth, height - skipHeight);
++    } else {
++      fastFwdTrans[trTypeHor][transformWidthIndex](block, tmp, shift_1st, height, 0, skipWidth);
++      fastFwdTrans[trTypeVer][transformHeightIndex](tmp, dstCoeff.buf, shift_2nd, width, skipWidth, skipHeight);
++    }
++
+   }
+   else if (height == 1)   // 1-D horizontal transform
+   {
+diff --git a/source/Lib/CommonLib/TrQuant_EMT.cpp b/source/Lib/CommonLib/TrQuant_EMT.cpp
+index 5851297..b459f8b 100644
+--- a/source/Lib/CommonLib/TrQuant_EMT.cpp
++++ b/source/Lib/CommonLib/TrQuant_EMT.cpp
+@@ -552,6 +552,32 @@ void fastInverseDCT2_B8(const TCoeff *src, TCoeff *dst, int shift, int line, int
+ #endif
+ }
+ 
++void DCT2_16x16(const TCoeff *src, TCoeff *dst, int line, int iSkipLine, int iSkipLine2)
++{
++    TCoeff tmp[16 * 16];
++    const int shift_1st = 3;
++    const int shift_2nd =  10;
++    fastForwardDCT2_B16(src, tmp, shift_1st, 16, 0, iSkipLine);
++    fastForwardDCT2_B16(tmp, dst, shift_2nd, line, iSkipLine, iSkipLine2);
++}
++
++void DCT2_32x32(const TCoeff *src, TCoeff *dst, int line, int iSkipLine, int iSkipLine2)
++{
++    TCoeff tmp[32 * 32];
++    const int shift_1st = 4;
++    const int shift_2nd =  11;
++    fastForwardDCT2_B32(src, tmp, shift_1st, 32, 0, iSkipLine);
++    fastForwardDCT2_B32(tmp, dst, shift_2nd, line, iSkipLine, iSkipLine2);
++}
++
++void DCT2_64x64(const TCoeff *src, TCoeff *dst, int line, int iSkipLine, int iSkipLine2)
++{
++    TCoeff tmp[64 * 64];
++    const int shift_1st = 5;
++    const int shift_2nd =  12;
++    fastForwardDCT2_B64(src, tmp, shift_1st, 64, 0, iSkipLine);
++    fastForwardDCT2_B64(tmp, dst, shift_2nd, line, iSkipLine, iSkipLine2);
++}
+ 
+ /** 16x16 forward transform implemented using partial butterfly structure (1D)
+ *  \param src   input data (residual)
+@@ -2023,6 +2049,12 @@ TCoeffOps::TCoeffOps()
+   fastFwdCore_2D[2] = fastFwdCore<16>;
+   fastFwdCore_2D[3] = fastFwdCore<32>;
+   fastFwdCore_2D[4] = fastFwdCore<64>;
++  DCT2[0]           = DCT2_16x16;
++  DCT2[1]           = DCT2_32x32;
++  DCT2[2]           = DCT2_64x64;
++  DCT2_KVCL[0]      = KvclVvcDct16x16;
++  DCT2_KVCL[1]      = KvclVvcDct32x32;
++  DCT2_KVCL[2]      = KvclVvcDct64x64;
+ }
+ 
+ TCoeffOps g_tCoeffOps;
+diff --git a/source/Lib/CommonLib/TrQuant_EMT.h b/source/Lib/CommonLib/TrQuant_EMT.h
+index e4893aa..b830e1c 100644
+--- a/source/Lib/CommonLib/TrQuant_EMT.h
++++ b/source/Lib/CommonLib/TrQuant_EMT.h
+@@ -46,7 +46,7 @@ POSSIBILITY OF SUCH DAMAGE.
+ #pragma once
+ 
+ #include "CommonDef.h"
+-
++#include <kvcl.h>
+ //! \ingroup CommonLib
+ //! \{
+ 
+@@ -84,6 +84,8 @@ struct TCoeffOps
+   void( *fastFwdCore_1D[5] )( const TMatrixCoeff* it,  const TCoeff* src, TCoeff* dst, unsigned lines, unsigned reducedLines, unsigned cutoff, int shift );
+   void( *roundClip4 )       (                                             TCoeff *dst, unsigned width, unsigned height, unsigned stride, const TCoeff outputMin, const TCoeff outputMax, const TCoeff round, const TCoeff shift );
+   void( *roundClip8 )       (                                             TCoeff *dst, unsigned width, unsigned height, unsigned stride, const TCoeff outputMin, const TCoeff outputMax, const TCoeff round, const TCoeff shift );
++  void( *DCT2[3] )          (const TCoeff *src, TCoeff *dst, int line, int iSkipLine, int iSkipLine2);
++  void( *DCT2_KVCL[3] )     (const int32_t* src, int32_t* dst, int32_t line, int32_t iRangeHor, int32_t iRangeVer);
+ };
+ 
+ extern TCoeffOps g_tCoeffOps;
+@@ -103,6 +105,9 @@ void fastForwardDCT2_B32 (const TCoeff *src, TCoeff *dst, int shift, int line, i
+ void fastInverseDCT2_B32 (const TCoeff *src, TCoeff *dst, int shift, int line, int iSkipLine, int iSkipLine2, const TCoeff outputMinimum, const TCoeff outputMaximum);
+ void fastForwardDCT2_B64 (const TCoeff *src, TCoeff *dst, int shift, int line, int iSkipLine, int iSkipLine2);
+ void fastInverseDCT2_B64 (const TCoeff *src, TCoeff *dst, int shift, int line, int iSkipLine, int iSkipLine2, const TCoeff outputMinimum, const TCoeff outputMaximum);
++void DCT2_16x16 (const TCoeff *src, TCoeff *dst, int line, int iSkipLine, int iSkipLine2);
++void DCT2_32x32 (const TCoeff *src, TCoeff *dst, int line, int iSkipLine, int iSkipLine2);
++void DCT2_64x64 (const TCoeff *src, TCoeff *dst, int line, int iSkipLine, int iSkipLine2);
+ 
+ //DST-VII transforms (EMT)
+ void fastForwardDST7_B4  (const TCoeff *src, TCoeff *dst, int shift, int line, int iSkipLine, int iSkipLine2);
+diff --git a/source/Lib/CommonLib/x86/CommonDefX86.cpp b/source/Lib/CommonLib/x86/CommonDefX86.cpp
+index ff35ccf..0f6d358 100644
+--- a/source/Lib/CommonLib/x86/CommonDefX86.cpp
++++ b/source/Lib/CommonLib/x86/CommonDefX86.cpp
+@@ -111,7 +111,7 @@ X86_VEXT string_to_x86_vext( const std::string& ext_name )
+   THROW( "Invalid SIMD Mode string: \"" << ext_name << "\"" );
+ }
+ 
+-#if __GNUC__   // valid for GCC and clang
++#if __GNUC__ && !defined(__clang__)   // GCC only - clang does not support no-tree-vectorize
+ # define NO_OPT_SIMD __attribute__( ( optimize( "no-tree-vectorize" ) ) )
+ #else
+ # define NO_OPT_SIMD
+diff --git a/source/Lib/vvenc/CMakeLists.txt b/source/Lib/vvenc/CMakeLists.txt
+index 5a8f4a0..d09cca0 100644
+--- a/source/Lib/vvenc/CMakeLists.txt
++++ b/source/Lib/vvenc/CMakeLists.txt
+@@ -82,6 +82,10 @@ include_directories( $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../../incl
+ include_directories( . .. ../DecoderLib ../EncoderLib ../CommonLib ../CommonLib/x86 ../CommonLib/arm ../apputils )
+ include_directories( SYSTEM ../../../thirdparty )
+ 
++# kvcl external library
++set( KVCL_ROOT /path/to/kvcl )
++find_library( KVCL_LIBRARY kvcl PATHS ${KVCL_ROOT}/lib REQUIRED )
++
+ # set common warning flags
+ add_compile_options( "$<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>:-Wall;-Wno-deprecated-register;-Wno-unused-const-variable;-Wno-unknown-attributes>" )
+ add_compile_options( "$<$<CXX_COMPILER_ID:GNU>:-Wall;-Wno-unused-function;;-Wno-unused-variable;-Wno-sign-compare;-fdiagnostics-show-option;-Wno-ignored-attributes>" )
+@@ -136,6 +140,7 @@ if( VVENC_ENABLE_X86_SIMD )
+   set_target_properties( ${LIB_NAME}_x86_simd PROPERTIES FOLDER lib )
+ 
+   target_include_directories( ${LIB_NAME}_x86_simd PRIVATE $<$<TARGET_EXISTS:nlohmann_json::nlohmann_json>:$<TARGET_PROPERTY:nlohmann_json::nlohmann_json,INTERFACE_INCLUDE_DIRECTORIES>> )
++  target_include_directories( ${LIB_NAME}_x86_simd PRIVATE ${KVCL_ROOT}/include )
+   target_compile_options( ${LIB_NAME}_x86_simd PRIVATE $<$<TARGET_EXISTS:nlohmann_json::nlohmann_json>:$<TARGET_PROPERTY:nlohmann_json::nlohmann_json,INTERFACE_COMPILE_OPTIONS>> )
+   target_compile_definitions( ${LIB_NAME}_x86_simd PRIVATE $<$<TARGET_EXISTS:nlohmann_json::nlohmann_json>:$<TARGET_PROPERTY:nlohmann_json::nlohmann_json,INTERFACE_COMPILE_DEFINITIONS>> )
+ endif()
+@@ -176,6 +181,7 @@ if( VVENC_ENABLE_ARM_SIMD )
+   set_target_properties( ${LIB_NAME}_arm_simd PROPERTIES FOLDER lib )
+ 
+   target_include_directories( ${LIB_NAME}_arm_simd PRIVATE $<$<TARGET_EXISTS:nlohmann_json::nlohmann_json>:$<TARGET_PROPERTY:nlohmann_json::nlohmann_json,INTERFACE_INCLUDE_DIRECTORIES>> )
++  target_include_directories( ${LIB_NAME}_arm_simd PRIVATE ${KVCL_ROOT}/include )
+   target_compile_options( ${LIB_NAME}_arm_simd PRIVATE $<$<TARGET_EXISTS:nlohmann_json::nlohmann_json>:$<TARGET_PROPERTY:nlohmann_json::nlohmann_json,INTERFACE_COMPILE_OPTIONS>> )
+   target_compile_definitions( ${LIB_NAME}_arm_simd PRIVATE $<$<TARGET_EXISTS:nlohmann_json::nlohmann_json>:$<TARGET_PROPERTY:nlohmann_json::nlohmann_json,INTERFACE_COMPILE_DEFINITIONS>> )
+ endif()
+@@ -190,6 +196,7 @@ add_library( ${LIB_NAME} ${SRC_FILES} $<$<TARGET_EXISTS:${LIB_NAME}_x86_simd>:$<
+ target_compile_definitions( ${LIB_NAME} PUBLIC $<$<STREQUAL:$<TARGET_PROPERTY:${LIB_NAME},TYPE>,SHARED_LIBRARY>:${LIB_NAME_UC}_DYN_LINK> )
+ 
+ target_include_directories( ${LIB_NAME} SYSTEM INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../../include> $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}> )
++target_include_directories( ${LIB_NAME} PUBLIC ${KVCL_ROOT}/include )
+ 
+ if( CMAKE_COMPILER_IS_GNUCC AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 7.0 )
+   target_compile_options( ${LIB_NAME} PRIVATE $<$<CXX_COMPILER_ID:GNU>: -Wno-array-bounds> )
+@@ -200,9 +207,9 @@ target_compile_options( ${LIB_NAME} PRIVATE $<$<TARGET_EXISTS:nlohmann_json::nlo
+ target_compile_definitions( ${LIB_NAME} PRIVATE $<$<TARGET_EXISTS:nlohmann_json::nlohmann_json>:$<TARGET_PROPERTY:nlohmann_json::nlohmann_json,INTERFACE_COMPILE_DEFINITIONS>> )
+ 
+ if( TARGET INTEL_ITT)
+-  target_link_libraries( ${LIB_NAME} PRIVATE INTEL_ITT Threads::Threads )
++  target_link_libraries( ${LIB_NAME} PRIVATE INTEL_ITT Threads::Threads ${KVCL_LIBRARY} )
+ else()
+-  target_link_libraries( ${LIB_NAME} PRIVATE Threads::Threads )
++  target_link_libraries( ${LIB_NAME} PRIVATE Threads::Threads ${KVCL_LIBRARY} )
+ endif()
+ 
+ if( CMAKE_USE_PTHREADS_INIT )
+diff --git a/test/vvenc_unit_test/vvenc_unit_test.cpp b/test/vvenc_unit_test/vvenc_unit_test.cpp
+index 4a50811..cb61402 100644
+--- a/test/vvenc_unit_test/vvenc_unit_test.cpp
++++ b/test/vvenc_unit_test/vvenc_unit_test.cpp
+@@ -46,6 +46,7 @@ POSSIBILITY OF SUCH DAMAGE.
+   \brief   This vvenclibtest.cpp file contains the main entry point of the test application.
+ */
+ 
++#include <chrono>
+ #include <cmath>
+ #include <iostream>
+ #include <limits.h>
+@@ -464,6 +465,99 @@ static bool check_one_fastInvCore( TCoeffOps* ref, TCoeffOps* opt, unsigned idx,
+   return ret;
+ }
+ 
++template<typename G>
++static bool check_one_KVCL_DCT2(TCoeffOps* ref, unsigned idx, unsigned trSize, unsigned line,
++                                      unsigned reducedLine, unsigned cutoff, G input_generator,
++                                      double& elapsed_vvenc_us, double& elapsed_kvcl_us)
++{
++  CHECK( line == 0, "Line must be non-zero" );
++  CHECK( reducedLine > line, "ReducedLine must be less than or equal to line" );
++  CHECK( cutoff == 0, "Cutoff must be non-zero" );
++  CHECK( cutoff % 4, "Cutoff must be a multiple of four" );
++  CHECK( cutoff > trSize, "Cutoff must not be larger than transformation size" );
++
++  std::ostringstream sstm;
++  sstm << "fastFwdCore_2D trSize=" << trSize << " line=" << line << " reducedLine=" << reducedLine
++       << " cutoff=" << cutoff;
++
++  TCoeff       *src_vvenc  = ( TCoeff* )       xMalloc( TCoeff,       trSize * line );
++  TCoeff       *src_kvcl  = ( TCoeff* )     xMalloc( TCoeff,       trSize * line );
++  TCoeff       *dst_vvenc = ( TCoeff* )       xMalloc( TCoeff,       trSize * line );
++  TCoeff       *dst_kvcl = ( TCoeff* )       xMalloc( TCoeff,       trSize * line );
++
++  // Initialize source and destination buffers, make sure that destination
++  // buffers match in elements that are not written to by the kernel being
++  // tested.
++  std::generate( src_vvenc, src_vvenc + trSize * line,  input_generator );
++  for (int i = 0; i < trSize * line; ++i) {
++    src_kvcl[i] = src_vvenc[i];
++  }
++  memset( dst_vvenc, 0, trSize * line * sizeof( TCoeff ) );
++  memset( dst_kvcl, 0, trSize * line * sizeof( TCoeff ) );
++
++  // Time DCT2 (vvenc reference)
++  auto t0 = std::chrono::high_resolution_clock::now();
++  ref->DCT2[idx](src_vvenc, dst_vvenc, line, trSize - cutoff, line - reducedLine);
++  auto t1 = std::chrono::high_resolution_clock::now();
++  elapsed_vvenc_us = std::chrono::duration<double, std::micro>(t1 - t0).count();
++
++  // Time KvclVvcDct16x16 (KVCL implementation)
++  auto t2 = std::chrono::high_resolution_clock::now();
++  ref->DCT2_KVCL[idx](src_kvcl, dst_kvcl, line, cutoff, reducedLine);
++  auto t3 = std::chrono::high_resolution_clock::now();
++  elapsed_kvcl_us = std::chrono::duration<double, std::micro>(t3 - t2).count();
++
++  bool ret = true;
++  for (int i = 0; i < trSize * trSize; ++i) {
++    if(dst_kvcl[i] != dst_vvenc[i]) {
++      ret = false;
++      printf("dst_kvcl[%d] = %d, dst_vvenc[%d] = %d\n", i, dst_kvcl[i], i, dst_vvenc[i]);
++      break;
++    }
++  }
++
++  xFree( src_vvenc );
++  xFree( src_kvcl );
++  xFree( dst_vvenc );
++  xFree( dst_kvcl );
++
++  return ret;
++}
++
++static bool check_KVCL_DCT2( TCoeffOps* ref, unsigned num_cases, unsigned idx, unsigned trSize )
++{
++  printf( "Testing TCoeffOps::KVCL_DCT2 trSize=%d\n", trSize );
++  InputGenerator<TCoeff> g{ 8 }; // signed 8 bit in both positive/negative, i.e. 9 bit shifted to signed
++  DimensionGenerator rng;
++
++  double total_vvenc_us = 0.0;
++  double total_kvcl_us  = 0.0;
++
++  for( unsigned i = 0; i < num_cases; ++i )
++  {
++    // Clamp line down to the next multiple of four when generating reducedLine
++    // to avoid existing x86 implementations over-writing.
++    unsigned line        = trSize;//1 << rng.get( 1, 6 );
++    unsigned reducedLine = rng.get( 1, line, 1 );//rng.get( 1, line, 1 ); //trSize ==  64 ? 32 : line; // == 2 ? 2 : std::min( 32u, rng.get( 4, line, 4 ) );
++    unsigned cutoff      = rng.get( 4, trSize, 4 ); //trSize == 64 ? 32 : trSize; //rng.get( 4, trSize, 4 );  // Cutoff must be a non-zero multiple of four.
++    double elapsed_vvenc_us = 0.0;
++    double elapsed_kvcl_us  = 0.0;
++    if( !check_one_KVCL_DCT2( ref, idx, trSize, line, reducedLine, cutoff, g, elapsed_vvenc_us, elapsed_kvcl_us) )
++    {
++      return false;
++    }
++    total_vvenc_us += elapsed_vvenc_us;
++    total_kvcl_us  += elapsed_kvcl_us;
++  }
++
++  printf( "  runs=%u  DCT2_%dx%d total: %.2f us (avg: %.2f us)  KvclVvcDct%dx%d total: %.2f us (avg: %.2f us)\n",
++          num_cases, trSize, trSize, total_vvenc_us, total_vvenc_us / num_cases, trSize, trSize, total_kvcl_us, total_kvcl_us / num_cases );
++
++  return true;
++}
++
++
++
+ template<typename G, typename T>
+ static bool check_one_fastFwdCore_2D( TCoeffOps* ref, TCoeffOps* opt, unsigned idx, unsigned trSize, unsigned line,
+                                       unsigned reducedLine, unsigned cutoff, unsigned shift, G input_generator, T trafo_generator )
+@@ -591,6 +685,10 @@ static bool test_TCoeffOps()
+   passed = check_fastFwdCore_2D( &ref, &opt, num_cases, 2, 16 ) && passed;
+   passed = check_fastFwdCore_2D( &ref, &opt, num_cases, 3, 32 ) && passed;
+   passed = check_fastFwdCore_2D( &ref, &opt, num_cases, 4, 64 ) && passed;
++  passed = check_KVCL_DCT2( &opt, 100000, 0, 16 ) && passed;
++  passed = check_KVCL_DCT2( &opt, 100000, 1, 32 ) && passed;
++  passed = check_KVCL_DCT2( &opt, 100000, 2, 64 ) && passed;
++
+   return passed;
+ }
+ #endif // ENABLE_SIMD_TRAFO

@@ -1,3 +1,2 @@
 - [项目介绍](../../README.md)
-- [环境部署](./install_guide_bin.md)
-- [快速开始](./quick_start.md)
+- [特性指南](./feature_guide.md)

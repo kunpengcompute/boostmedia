@@ -2,28 +2,25 @@
 
 ## 最新消息
 
-- [2026.03.30]: 发布KVCL 1.0.0版本。新增KvclDct16x16、KvclDct32x32、KvclIDct16x16、KvclLumaVPP32x32、KvclLumaVPP64x64、KvclLumaHPP32x32、KvclLumaHPP64x64、KvclChromaHPP32x32、KvclChromaHPP16x16、KvclScanPosLast、KvclQuantRdoq、KvclSad64x32、KvclSad64x64、KvclSad4x32x32、KvclSad4x32x64、KvclSad4x64x16、KvclSad4x64x32、KvclSad4x64x64、KvclSaoCuStatsE0、KvclSaoCuStatsE1、KvclSaoCuStatsE2、KvclSaoCuStatsE3、KvclSatd8x8、KvclSatd16x16、KvclSa8d8x8、KvclSa8d16x16算子。
+- [2026.09.30]: 发布KVCL1.1.0版本。新增KvclVvcDct16x16、KvclVvcDct32x32、KvclVvcDct64x64、KvclVvcSa16d32x32 算子
+- [2026.03.30]: 发布KVCL1.0.0版本。新增KvclDct16x16、KvclDct32x32、KvclSatd8x8、KvclSatd16x16、KvclSa8d8x8、KvclSa8d16x16、KvclScanPosLast、KvclLumaVPP32x32、KvclLumaVPP64x64、KvclChromaHPP32x32、KvclChromaHPP16x16、KvclSaoCuStatsE0、KvclSaoCuStatsE1、KvclSaoCuStatsE2、KvclSaoCuStatsE3、KvclSad64x32、KvclSad64x64、KvclChromaHPS32x32、KvclChromaHPS16x16、KvclSa16d16x16 算子
 
 ## 简介
 
 在不同的视频处理框架（如FFmpeg、Gstreamer等）和编码器中，存在大量功能相同的算子，如SATD/SAD、DCT、SAO。
 
-KVCL（Kunpeng Video Codec Library）包含了视频编码中的TOP通用算子，且KVCL针对鲲鹏硬件对算子进行了优化。
-
+KVCL（Kunpeng Video Codec Library，鲲鹏视频算子库）包含了视频编码中的TOP通用算子，且KVCL针对鲲鹏硬件对算子进行了优化。
 
 ## 版本说明
 
 | KVCL版本   | 特性变更    |
 | ------------ | ------------ |
-|   1.0.0    |   新增KvclDct16x16、KvclDct32x32、KvclIDct16x16、KvclLumaVPP32x32、KvclLumaVPP64x64、KvclLumaHPP32x32、KvclLumaHPP64x64、KvclChromaHPP32x32、KvclChromaHPP16x16、KvclScanPosLast、KvclQuantRdoq、KvclSad64x32、KvclSad64x64、KvclSad4x32x32、KvclSad4x32x64、KvclSad4x64x16、KvclSad4x64x32、KvclSad4x64x64、KvclSaoCuStatsE0、KvclSaoCuStatsE1、KvclSaoCuStatsE2、KvclSaoCuStatsE3、KvclSatd8x8、KvclSatd16x16、KvclSa8d8x8、KvclSa8d16x16 算子   |
+|   1.0.0    |   新增KvclDct16x16、KvclDct32x32、KvclSatd8x8、KvclSatd16x16、KvclSa8d8x8、KvclSa8d16x16、KvclScanPosLast、KvclLumaVPP32x32、KvclLumaVPP64x64、KvclChromaHPP32x32、KvclChromaHPP16x16、KvclSaoCuStatsE0、KvclSaoCuStatsE1、KvclSaoCuStatsE2、KvclSaoCuStatsE3、KvclSad64x32、KvclSad64x64、KvclChromaHPS32x32、KvclChromaHPS16x16、KvclSa16d16x16 算子   |
+|   1.1.0    |   新增KvclVvcDct16x16、KvclVvcDct32x32、KvclVvcDct64x64、KvclVvcSa16d32x32 算子   |
 
-## 环境部署
+## 特性指南
 
-kvcl的环境部署步骤详见《[环境部署](./docs/zh/install_guide_bin.md)》。
-
-## 快速入门
-
-kvcl的快速入门步骤详见《[快速入门](./docs/zh/quick_start.md)》。
+KVCL的特性指南详见《[KVCL特性指南](./docs/zh/feature_guide.md)》。
 
 ## 功能介绍&特性介绍
 
@@ -56,7 +53,12 @@ kvcl的快速入门步骤详见《[快速入门](./docs/zh/quick_start.md)》。
 |KvclSatd8x8 | 计算8x8像素块的SATD（Hadamard变换差值的绝对值之和）|
 |KvclSatd16x16 |计算16x16像素块的SATD（Hadamard变换差值的绝对值之和） |
 |KvclSa8d8x8 |计算8x8像素块的SA8D（Hadamard变换绝对差值之和） |
-| KvclSa8d16x16 |计算16x16像素块的SA8D（Hadamard变换绝对差值之和） |
+|KvclSa8d16x16 |计算16x16像素块的SA8D（Hadamard变换绝对差值之和） |
+|KvclSa16d16x16 | 计算16x16像素块的 SA16D（Hadamard变换绝对差值之和） |
+|KvclVvcSa16d32x32 | 计算Vvc下的32x32像素块的SA16D（Hadamard变换绝对差值之和） |
+|KvclVvcDct16x16 | 计算Vvc下的16x16像素块的 DCT变换 |
+|KvclVvcDct32x32 | 计算Vvc下的32x32像素块的 DCT变换 |
+|KvclVvcDct64x64 | 计算Vvc下的64x64像素块的 DCT变换 |
 
 ### 特性
 

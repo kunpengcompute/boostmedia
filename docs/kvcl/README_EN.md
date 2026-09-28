@@ -101,7 +101,7 @@ KVCL uses various methods to optimize operators, for example:
 
 ## License
 
-For the license of the KVCL project, see [LICENSE](./LICENSE). The documentation of this project is licensed under CC-BY 4.0. For details, see [LICENSE](./docs/LICENSE).
+The documentation of this project is licensed under CC-BY 4.0. For details, see [LICENSE]((./docs/en/LICENSE)).
 
 ## Contribution Statement
 

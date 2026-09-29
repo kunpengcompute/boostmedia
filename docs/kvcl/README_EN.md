@@ -1,73 +1,108 @@
 # KVCL: Kunpeng Video Codec Library
 
-## Latest Updates
+<!-- md-trans-meta sourceCommit=27d274ca52a2dd84968a3eba75037a1dc0b75d33 translatedAt=2026-09-23T05:03:56.436Z pushedAt=2026-09-28T02:52:02.049Z -->
 
-- [2026-03-30]: Released KVCL 1.0.0. The KvclDct16x16, KvclDct32x32, KvclIDct16x16, KvclLumaVPP32x32, KvclLumaVPP64x64, KvclLumaHPP32x32, KvclLumaHPP64x64, KvclChromaHPP32x32, KvclChromaHPP16x16, KvclScanPosLast, KvclQuantRdoq, KvclSad64x32, KvclSad64x64, KvclSad4x32x32, KvclSad4x32x64, KvclSad4x64x16, KvclSad4x64x32, KvclSad4x64x64, KvclSaoCuStatsE0, KvclSaoCuStatsE1, KvclSaoCuStatsE2, KvclSaoCuStatsE3, KvclSatd8x8, KvclSatd16x16, KvclSa8d8x8, and KvclSa8d16x16 operators were added.
+## Latest News
+
+- [2026.09.30]: Released KVCL 1.1.0. Added the KvclVvcDct16x16, KvclVvcDct32x32, KvclVvcDct64x64, and KvclVvcSa16d32x32 operators.
+- [2026.03.30]: Released KVCL 1.0.0. Added the KvclDct16x16, KvclDct32x32, KvclSatd8x8, KvclSatd16x16, KvclSa8d8x8, KvclSa8d16x16, KvclScanPosLast, KvclLumaVPP32x32, KvclLumaVPP64x64, KvclChromaHPP32x32, KvclChromaHPP16x16, KvclSaoCuStatsE0, KvclSaoCuStatsE1, KvclSaoCuStatsE2, KvclSaoCuStatsE3, KvclSad64x32, KvclSad64x64, KvclChromaHPS32x32, KvclChromaHPS16x16, and KvclSa16d16x16 operators.
 
 ## Overview
 
-In different video processing frameworks (such as FFmpeg and GStreamer) and encoders, there are a large number of operators with the same functions, such as SATD/SAD, DCT, and SAO.
+Across different video processing frameworks (such as FFmpeg and GStreamer) and encoders, there are numerous operators with identical functionality, such as SATD/SAD, DCT, and SAO.
 
-Kunpeng Video Codec Library (KVCL) contains top common operators in video encoding and optimizes operators for Kunpeng hardware.
+KVCL (Kunpeng Video Codec Library) includes the top common operators in video encoding, and these operators are optimized for Kunpeng hardware.
 
+## Directory Structure
+
+```shell
+├── docs                     # Project documentation directory
+│   └── zh                   # Chinese documentation directory
+│       ├── LICENSE          # Document license
+│       ├── feature_guide.md # Feature guide
+│       ├── installation_guide.md # Installation guide
+│       └── release_note.md  # Release notes
+├── examples                 # Sample code directory
+├── include                  # Operator header file directory
+├── src                      # Source code directory
+│   ├── aarch64              # Operator assembly implementation directory
+│   ├── cmake                # CMake project directory
+│   └── neon                 # NEON source code directory
+├── test                     # Test code directory
+│   └── unit_bench_test      # Unit test directory
+├── build.sh                 # Build script
+├── CMakeLists.txt           # CMake configuration file
+├── LICENSE                  # Project license
+└── README.md                # Project description
+```
 
 ## Release Notes
 
-| KVCL Version  | Feature Change   |
+| KVCL Version   | Feature Changes    |
 | ------------ | ------------ |
-|   1.0.0    |   The KvclDct16x16, KvclDct32x32, KvclIDct16x16, KvclLumaVPP32x32, KvclLumaVPP64x64, KvclLumaHPP32x32, KvclLumaHPP64x64, KvclChromaHPP32x32, KvclChromaHPP16x16, KvclScanPosLast, KvclQuantRdoq, KvclSad64x32, KvclSad64x64, KvclSad4x32x32, KvclSad4x32x64, KvclSad4x64x16, KvclSad4x64x32, KvclSad4x64x64, KvclSaoCuStatsE0, KvclSaoCuStatsE1, KvclSaoCuStatsE2, KvclSaoCuStatsE3, KvclSatd8x8, KvclSatd16x16, KvclSa8d8x8, and KvclSa8d16x16 operators were added.  |
+|   1.0.0    |   Added the following operators: KvclDct16x16, KvclDct32x32, KvclSatd8x8, KvclSatd16x16, KvclSa8d8x8, KvclSa8d16x16, KvclScanPosLast, KvclLumaVPP32x32, KvclLumaVPP64x64, KvclChromaHPP32x32, KvclChromaHPP16x16, KvclSaoCuStatsE0, KvclSaoCuStatsE1, KvclSaoCuStatsE2, KvclSaoCuStatsE3, KvclSad64x32, KvclSad64x64, KvclChromaHPS32x32, KvclChromaHPS16x16, KvclSa16d16x16   |
+|   1.1.0    |   Added the following operators: KvclVvcDct16x16, KvclVvcDct32x32, KvclVvcDct64x64, KvclVvcSa16d32x32   |
 
 ## Environment Deployment
 
-For details about how to deploy the KVCL environment, see [Environment Deployment](./docs/en/install_guide_bin.md).
+For details about KVCL environment deployment, see [KVCL Environment Deployment](./docs/en/install_guide_bin.md).
 
 ## Quick Start
 
-For details about how to quickly start KVCL, see [Quick Start](./docs/en/quick_start.md).
+For details about KVCL features, see [KVCL Feature Guide](./docs/en/quick_start.md).
 
-## Features
+## Feature Description
 
 ### Functions
 
-|  Interface|  Function|
+| Interface | Responsibility |
 | ------------ | ------------ |
-| KvclDct16x16 | Computes DCT of a 16x16 pixel block. |
-| KvclDct32x32 | Computes DCT of a 32x32 pixel block. |
-| KvclIDct16x16 | Computes inverse DCT of a 16x16 pixel block. |
-| KvclLumaVPP32x32 | Computes vertical 8-tap interpolation of a 32x32 pixel block. |
-| KvclLumaVPP64x64 | Computes vertical 8-tap interpolation of a 64x64 pixel block. |
-| KvclLumaHPP32x32  | Computes horizontal 8-tap interpolation of a 32x32 pixel block. |
-| KvclLumaHPP64x64  | Computes horizontal 8-tap interpolation of a 64x64 pixel block. |
-| KvclChromaHPP32x32  | Computes horizontal 4-tap interpolation of a 32x32 pixel block. |
-| KvclChromaHPP16x16  | Computes horizontal 4-tap interpolation of a 16x16 pixel block. |
-| KvclScanPosLast  | Scans coefficients in the order provided by the scan order table until the last non-zero coefficient is found. |
-| KvclQuantRdoq  |  RDOQ-based quantization|
-| KvclSad64x32  |  Computes the SAD of a 64x32 pixel block.|
-|KvclSad64x64 |Computes the SAD of a 64x64 pixel block.|
-|KvclSad4x32x32 |Computes the SAD of a 4x32x32 pixel block.|
-|KvclSad4x32x64 |Computes the SAD of a 4x32x64 pixel block.|
-|KvclSad4x64x16 | Computes the SAD of a 4x64x16 pixel block.|
-|KvclSad4x64x32 | Computes the SAD of a 4x64x32 pixel block.|
-| KvclSad4x64x64| Computes the SAD of a 4x64x64 pixel block.|
-|KvclSaoCuStatsE0 |SAO statistics: SAO edge offset type 0, horizontal direction (left and right neighborhoods)|
-|KvclSaoCuStatsE1 | SAO statistics: SAO edge offset type 1, vertical direction (top and bottom neighborhoods)|
-|KvclSaoCuStatsE2 | SAO statistics: SAO edge offset type 2, diagonal direction (45-degree neighborhood from the upper left to the lower right)|
-|KvclSaoCuStatsE3 | SAO statistics: SAO edge offset type 3, anti-diagonal direction (135-degree neighborhood from the upper right to the lower left)|
-|KvclSatd8x8 | Computes the SATD of an 8x8 pixel block (sum of absolute Hadamard transform differences).|
-|KvclSatd16x16 |Computes the SATD of a 16x16 pixel block (sum of absolute Hadamard transform differences).|
-|KvclSa8d8x8 |Computes the SA8D of an 8x8 pixel block (sum of absolute Hadamard transform differences).|
-| KvclSa8d16x16 |Computes the SA8D of a 16x16 pixel block (sum of absolute Hadamard transform differences).|
+| KvclDct16x16 | Computes the discrete cosine transform (DCT) of a 16x16 pixel block. |
+| KvclDct32x32 | Computes the DCT of a 32x32 pixel block. |
+| KvclIDct16x16 | Computes the inverse discrete cosine transform (IDCT) of a 16x16 pixel block. |
+| KvclLumaVPP32x32 | Computes the vertical 8-tap interpolation of a 32x32 pixel block. |
+| KvclLumaVPP64x64 | Computes the vertical 8-tap interpolation of a 64x64 pixel block. |
+| KvclLumaHPP32x32 | Computes the horizontal 8-tap interpolation of a 32x32 pixel block. |
+| KvclLumaHPP64x64 | Computes the horizontal 8-tap interpolation of a 64x64 pixel block. |
+| KvclChromaHPP32x32 | Computes the horizontal 4-tap interpolation of a 32x32 pixel block. |
+| KvclChromaHPP16x16 | Computes the horizontal 4-tap interpolation of a 16x16 pixel block. |
+| KvclScanPosLast | Scans coefficients in the order provided by the scan order table until the last non-zero coefficient is found. |
+| KvclQuantRdoq | Quantization in the rate-distortion optimized quantization (RDOQ) phase. |
+| KvclSad64x32 | Computes the sum of absolute differences (SAD) of a 64x32 pixel block. |
+| KvclSad64x64 | Computes the SAD of a 64x64 pixel block. |
+| KvclSad4x32x32 | Computes the SAD of a 4x32x32 pixel block. |
+| KvclSad4x32x64 | Computes the SAD of a 4x32x64 pixel block. |
+| KvclSad4x64x16 | Computes the SAD of a 4x64x16 pixel block. |
+| KvclSad4x64x32 | Computes the SAD of a 4x64x32 pixel block. |
+| KvclSad4x64x64 | Computes the SAD of a 4x64x64 pixel block. |
+| KvclSaoCuStatsE0 | Computes sample adaptive offset (SAO)-related statistics: SAO edge offset type 0, horizontal direction (left and right neighbors). |
+| KvclSaoCuStatsE1 | Computes SAO-related statistics: SAO edge offset type 1, vertical direction (upper and lower neighbors). |
+| KvclSaoCuStatsE2 | Computes SAO-related statistics: SAO edge offset type 2, diagonal direction (45° neighbors from top-left to bottom-right). |
+| KvclSaoCuStatsE3 | Computes SAO-related statistics: SAO edge offset type 3, anti-diagonal direction (135° neighbors from top-right to bottom-left). |
+| KvclSatd8x8 | Computes the sum of absolute transformed differences (SATD) of an 8x8 pixel block via Hadamard transform. |
+| KvclSatd16x16 | Computes the SATD of a 16x16 pixel block via Hadamard transform. |
+| KvclSa8d8x8 | Computes the SA8D of an 8x8 pixel block via Hadamard transform. |
+| KvclSa8d16x16 | Computes the SA8D of a 16x16 pixel block via Hadamard transform. |
+| KvclSa16d16x16 | Computes the SA16D of a 16x16 pixel block via Hadamard transform. |
+| KvclVvcSa16d32x32 | Computes the SA16D of a 32x32 pixel block via Hadamard transform under VVC. |
+| KvclVvcDct16x16 | Computes the DCT of a 16x16 pixel block under VVC. |
+| KvclVvcDct32x32 | Computes the DCT of a 32x32 pixel block under VVC. |
+| KvclVvcDct64x64 | Computes the DCT of a 64x64 pixel block under VVC. |
 
 ### Features
 
-KVCL uses multiple methods to optimize operators, for example:
+KVCL uses various methods to optimize operators, for example:
 
-1. SIMD vectorization: KVCL uses SIMD instructions such as NEON, SVE, and SVE2 to implement operators and achieve data-level parallelism.
-2. Instruction combination: KVCL identifies specific instruction sequences and replaces them with more efficient instruction sequences that provide equivalent functionality, reducing the number of instructions and latency.
-3. Hardware feature optimization: KVCL performs instruction scheduling and register allocation based on Kunpeng hardware features to effectively reduce operator overhead.
-4. Mathematical expression optimization: By deeply understanding the mathematical essence of the computing mode and combining it with hardware features, significant performance improvement is achieved.
-5. Pipeline utilization optimization: Kunpeng chip instruction execution is divided into multiple phases. Pipeline utilization optimization reduces pipeline pauses and optimizes data dependencies to ensure high throughput of hardware pipelines.
+1. SIMD vectorization: KVCL uses SIMD instructions such as NEON, SVE, and SVE2 to implement operators, achieving data-level parallelism.
+2. Instruction merging: KVCL identifies specific instruction sequences and replaces them with functionally equivalent but more efficient instruction sequences, reducing the number of instructions and lowering latency.
+3. Optimization for hardware features: KVCL performs instruction scheduling and register allocation tailored to Kunpeng hardware features, effectively reducing operator overhead.
+4. Mathematical expression optimization: KVCL understands the mathematical nature of computation patterns and combines them with hardware features, achieving significant performance improvements.
+5. Pipeline utilization optimization: Instruction execution on Kunpeng chips is divided into multiple stages. Pipeline utilization optimization keeps the hardware pipeline in a high-throughput state by reducing pipeline stalls and optimizing data dependencies.
 
 ## License
 
-The documents of this project are licensed under CC-BY 4.0. For details, see [LICENSE](./docs/en/LICENSE).
+The documentation of this project is licensed under CC-BY 4.0. For details, see [LICENSE](./docs/en/LICENSE)).
+
+## Contribution Statement
+
+We appreciate and welcome contributions to the community! For specific contribution guidelines, refer to [this page](https://gitcode.com/boostkit/community/blob/master/docs/contributor/contributing.md). You are also welcome to join discussions in the [discussion area](https://gitcode.com/boostkit/community/discussions). Thank you for your support.

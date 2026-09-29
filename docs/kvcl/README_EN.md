@@ -45,11 +45,11 @@ KVCL (Kunpeng Video Codec Library) includes the top common operators in video en
 
 ## Environment Deployment
 
-For details about KVCL environment deployment, see [KVCL Environment Deployment](./docs/en/installation_guide.md).
+For details about KVCL environment deployment, see [KVCL Environment Deployment](./docs/en/install_guide_bin.md).
 
 ## Quick Start
 
-For details about KVCL features, see [KVCL Feature Guide](./docs/en/feature_guide.md).
+For details about KVCL features, see [KVCL Feature Guide](./docs/en/quick_start.md).
 
 ## Feature Description
 

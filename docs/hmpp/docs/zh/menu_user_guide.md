@@ -1,4 +1,9 @@
+# hmpp
+
 - [项目介绍](../../README.md)
+- [版本说明书](release_notes.md)
+- [安装指南](installation_guide.md)
+- [快速入门](quick_start.md)
 - [API参考](api_reference.md)
   - [公共说明](api_reference/common.md)
   - [基础函数](api_reference/core.md)
@@ -17,7 +22,4 @@
     - [几何与频域变换](api_reference/image/geometry.md)
     - [图像滤波](api_reference/image/filter.md)
     - [图像形态学](api_reference/image/morphology.md)
-- [版本说明书](release_notes.md)
-- [安装指南](installation_guide.md)
-- [快速入门](quick_start.md)
 - [常见问题](faq.md)
